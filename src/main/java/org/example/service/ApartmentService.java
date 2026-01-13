@@ -1,34 +1,34 @@
 package org.example.service;
 
-import org.example.dao.ApartmentDAO;
-import org.example.dao.BuildingDAO;
-import org.example.dao.OwnerDAO;
 import org.example.entity.Apartment;
 import org.example.entity.Building;
 import org.example.entity.Owner;
+import org.example.repository.ApartmentRepository;
+import org.example.repository.BuildingRepository;
+import org.example.repository.OwnerRepository;
 import org.example.util.ValidationUtil;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 public class ApartmentService {
-    private final ApartmentDAO apartmentDAO;
-    private final BuildingDAO buildingDAO;
-    private final OwnerDAO ownerDAO;
+    private final ApartmentRepository apartmentRepository;
+    private final BuildingRepository buildingRepository;
+    private final OwnerRepository ownerRepository;
 
     public ApartmentService() {
-        this.apartmentDAO = new ApartmentDAO();
-        this.buildingDAO = new BuildingDAO();
-        this.ownerDAO = new OwnerDAO();
+        this.apartmentRepository = new ApartmentRepository();
+        this.buildingRepository = new BuildingRepository();
+        this.ownerRepository = new OwnerRepository();
     }
 
     public Apartment createApartment(String number, Integer floor, BigDecimal area, Long buildingId, Long ownerId) {
-        Building building = buildingDAO.findById(buildingId);
+        Building building = buildingRepository.findById(buildingId);
         if (building == null) {
             throw new IllegalArgumentException("Building not found with id: " + buildingId);
         }
 
-        Owner owner = ownerDAO.findById(ownerId);
+        Owner owner = ownerRepository.findById(ownerId);
         if (owner == null) {
             throw new IllegalArgumentException("Owner not found with id: " + ownerId);
         }
@@ -38,11 +38,11 @@ public class ApartmentService {
         if (validationError != null) {
             throw new IllegalArgumentException("Validation failed: " + validationError);
         }
-        return apartmentDAO.save(apartment);
+        return apartmentRepository.save(apartment);
     }
 
     public Apartment updateApartment(Long id, String number, Integer floor, BigDecimal area) {
-        Apartment apartment = apartmentDAO.findById(id);
+        Apartment apartment = apartmentRepository.findById(id);
         if (apartment == null) {
             throw new IllegalArgumentException("Apartment not found with id: " + id);
         }
@@ -53,30 +53,30 @@ public class ApartmentService {
         if (validationError != null) {
             throw new IllegalArgumentException("Validation failed: " + validationError);
         }
-        return apartmentDAO.update(apartment);
+        return apartmentRepository.update(apartment);
     }
 
     public void deleteApartment(Long id) {
-        Apartment apartment = apartmentDAO.findById(id);
+        Apartment apartment = apartmentRepository.findById(id);
         if (apartment == null) {
             throw new IllegalArgumentException("Apartment not found with id: " + id);
         }
-        apartmentDAO.delete(id);
+        apartmentRepository.delete(id);
     }
 
     public Apartment getApartmentById(Long id) {
-        return apartmentDAO.findById(id);
+        return apartmentRepository.findById(id);
     }
 
     public List<Apartment> getAllApartments() {
-        return apartmentDAO.findAll();
+        return apartmentRepository.findAll();
     }
 
     public List<Apartment> getApartmentsByBuilding(Long buildingId) {
-        return apartmentDAO.findByBuilding(buildingId);
+        return apartmentRepository.findByBuilding(buildingId);
     }
 
     public List<Apartment> getApartmentsByOwner(Long ownerId) {
-        return apartmentDAO.findByOwner(ownerId);
+        return apartmentRepository.findByOwner(ownerId);
     }
 }

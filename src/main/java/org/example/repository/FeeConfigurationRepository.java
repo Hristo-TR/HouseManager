@@ -1,12 +1,12 @@
-package org.example.dao;
+package org.example.repository;
 
 import org.example.entity.FeeConfiguration;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
-public class FeeConfigurationDAO extends GenericDAO<FeeConfiguration> {
-    public FeeConfigurationDAO() {
+public class FeeConfigurationRepository extends BaseRepository<FeeConfiguration> {
+    public FeeConfigurationRepository() {
         super(FeeConfiguration.class);
     }
 

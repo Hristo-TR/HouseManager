@@ -1,9 +1,9 @@
 package org.example.service;
 
-import org.example.dao.ApartmentDAO;
-import org.example.dao.PaymentDAO;
 import org.example.entity.Apartment;
 import org.example.entity.Payment;
+import org.example.repository.ApartmentRepository;
+import org.example.repository.PaymentRepository;
 import org.example.util.FileExportUtil;
 
 import java.math.BigDecimal;
@@ -11,27 +11,26 @@ import java.time.LocalDate;
 import java.util.List;
 
 public class PaymentService {
-    private final PaymentDAO paymentDAO;
-    private final ApartmentDAO apartmentDAO;
+    private final PaymentRepository paymentRepository;
+    private final ApartmentRepository apartmentRepository;
     private final FeeService feeService;
 
     public PaymentService() {
-        this.paymentDAO = new PaymentDAO();
-        this.apartmentDAO = new ApartmentDAO();
+        this.paymentRepository = new PaymentRepository();
+        this.apartmentRepository = new ApartmentRepository();
         this.feeService = new FeeService();
     }
 
     public Payment recordPayment(Long apartmentId, BigDecimal amount, LocalDate paymentDate,
                                  Integer month, Integer year) {
-        Apartment apartment = apartmentDAO.findById(apartmentId);
+        Apartment apartment = apartmentRepository.findById(apartmentId);
         if (apartment == null) {
             throw new IllegalArgumentException("Apartment not found with id: " + apartmentId);
         }
 
         Payment payment = new Payment(amount, paymentDate, month, year, apartment);
-        Payment savedPayment = paymentDAO.save(payment);
+        Payment savedPayment = paymentRepository.save(payment);
 
-        // Export payment to file
         try {
             String filename = "payment_" + apartmentId + "_" + year + "_" + month + ".txt";
             FileExportUtil.exportPaymentsToFile(List.of(savedPayment), filename);
@@ -48,39 +47,39 @@ public class PaymentService {
     }
 
     public List<Payment> getPaymentsByApartment(Long apartmentId) {
-        return paymentDAO.findByApartment(apartmentId);
+        return paymentRepository.findByApartment(apartmentId);
     }
 
     public List<Payment> getPaymentsByBuilding(Long buildingId) {
-        return paymentDAO.findByBuilding(buildingId);
+        return paymentRepository.findByBuilding(buildingId);
     }
 
     public List<Payment> getPaymentsByCompany(Long companyId) {
-        return paymentDAO.findByCompany(companyId);
+        return paymentRepository.findByCompany(companyId);
     }
 
     public List<Payment> getPaymentsByEmployee(Long employeeId) {
-        return paymentDAO.findByEmployee(employeeId);
+        return paymentRepository.findByEmployee(employeeId);
     }
 
     public BigDecimal getTotalPaidByApartment(Long apartmentId) {
-        return paymentDAO.getTotalAmountByApartment(apartmentId);
+        return paymentRepository.getTotalAmountByApartment(apartmentId);
     }
 
     public BigDecimal getTotalPaidByBuilding(Long buildingId) {
-        return paymentDAO.getTotalAmountByBuilding(buildingId);
+        return paymentRepository.getTotalAmountByBuilding(buildingId);
     }
 
     public BigDecimal getTotalPaidByCompany(Long companyId) {
-        return paymentDAO.getTotalAmountByCompany(companyId);
+        return paymentRepository.getTotalAmountByCompany(companyId);
     }
 
     public BigDecimal getTotalPaidByEmployee(Long employeeId) {
-        return paymentDAO.getTotalAmountByEmployee(employeeId);
+        return paymentRepository.getTotalAmountByEmployee(employeeId);
     }
 
     public void exportAllPaymentsToFile(String filename) {
-        List<Payment> allPayments = paymentDAO.findAll();
+        List<Payment> allPayments = paymentRepository.findAll();
         try {
             FileExportUtil.exportPaymentsToFile(allPayments, filename);
         } catch (Exception e) {

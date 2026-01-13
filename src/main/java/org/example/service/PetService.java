@@ -1,24 +1,24 @@
 package org.example.service;
 
-import org.example.dao.ApartmentDAO;
-import org.example.dao.PetDAO;
 import org.example.entity.Apartment;
 import org.example.entity.Pet;
+import org.example.repository.ApartmentRepository;
+import org.example.repository.PetRepository;
 import org.example.util.ValidationUtil;
 
 import java.util.List;
 
 public class PetService {
-    private final PetDAO petDAO;
-    private final ApartmentDAO apartmentDAO;
+    private final PetRepository petRepository;
+    private final ApartmentRepository apartmentRepository;
 
     public PetService() {
-        this.petDAO = new PetDAO();
-        this.apartmentDAO = new ApartmentDAO();
+        this.petRepository = new PetRepository();
+        this.apartmentRepository = new ApartmentRepository();
     }
 
     public Pet createPet(String name, String type, Boolean usesCommonAreas, Long apartmentId) {
-        Apartment apartment = apartmentDAO.findById(apartmentId);
+        Apartment apartment = apartmentRepository.findById(apartmentId);
         if (apartment == null) {
             throw new IllegalArgumentException("Apartment not found with id: " + apartmentId);
         }
@@ -28,11 +28,11 @@ public class PetService {
         if (validationError != null) {
             throw new IllegalArgumentException("Validation failed: " + validationError);
         }
-        return petDAO.save(pet);
+        return petRepository.save(pet);
     }
 
     public Pet updatePet(Long id, String name, String type, Boolean usesCommonAreas) {
-        Pet pet = petDAO.findById(id);
+        Pet pet = petRepository.findById(id);
         if (pet == null) {
             throw new IllegalArgumentException("Pet not found with id: " + id);
         }
@@ -43,26 +43,26 @@ public class PetService {
         if (validationError != null) {
             throw new IllegalArgumentException("Validation failed: " + validationError);
         }
-        return petDAO.update(pet);
+        return petRepository.update(pet);
     }
 
     public void deletePet(Long id) {
-        Pet pet = petDAO.findById(id);
+        Pet pet = petRepository.findById(id);
         if (pet == null) {
             throw new IllegalArgumentException("Pet not found with id: " + id);
         }
-        petDAO.delete(id);
+        petRepository.delete(id);
     }
 
     public Pet getPetById(Long id) {
-        return petDAO.findById(id);
+        return petRepository.findById(id);
     }
 
     public List<Pet> getAllPets() {
-        return petDAO.findAll();
+        return petRepository.findAll();
     }
 
     public List<Pet> getPetsByApartment(Long apartmentId) {
-        return petDAO.findByApartment(apartmentId);
+        return petRepository.findByApartment(apartmentId);
     }
 }

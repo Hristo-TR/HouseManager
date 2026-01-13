@@ -13,24 +13,24 @@ public class Resident {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "First name is required")
+    @NotBlank
     @Column(name = "first_name", nullable = false)
     private String firstName;
 
-    @NotBlank(message = "Last name is required")
+    @NotBlank
     @Column(name = "last_name", nullable = false)
     private String lastName;
 
-    @NotNull(message = "Birth date is required")
+    @NotNull
     @Column(name = "birth_date", nullable = false)
     private LocalDate birthDate;
 
-    @NotNull(message = "Elevator usage flag is required")
+    @NotNull
     @Column(name = "uses_elevator", nullable = false)
     private Boolean usesElevator;
 
-    @NotNull(message = "Apartment is required")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @NotNull
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "apartment_id", nullable = false)
     private Apartment apartment;
 

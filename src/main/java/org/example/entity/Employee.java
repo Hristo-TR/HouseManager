@@ -14,24 +14,24 @@ public class Employee {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "First name is required")
+    @NotBlank
     @Column(name = "first_name", nullable = false)
     private String firstName;
 
-    @NotBlank(message = "Last name is required")
+    @NotBlank
     @Column(name = "last_name", nullable = false)
     private String lastName;
 
-    @NotBlank(message = "Phone is required")
+    @NotBlank
     @Column(nullable = false)
     private String phone;
 
-    @NotNull(message = "Company is required")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @NotNull
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "company_id", nullable = false)
     private Company company;
 
-    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Building> buildings = new ArrayList<>();
 
     public Employee() {

@@ -1,4 +1,4 @@
-package org.example.dao;
+package org.example.repository;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -7,11 +7,11 @@ import org.hibernate.query.Query;
 
 import java.util.List;
 
-public abstract class GenericDAO<T> {
+public abstract class BaseRepository<T> {
     protected SessionFactory sessionFactory;
     private Class<T> entityClass;
 
-    public GenericDAO(Class<T> entityClass) {
+    public BaseRepository(Class<T> entityClass) {
         this.entityClass = entityClass;
         this.sessionFactory = org.example.config.HibernateConfig.getSessionFactory();
     }
@@ -87,7 +87,7 @@ public abstract class GenericDAO<T> {
         Transaction transaction = null;
         try {
             transaction = session.beginTransaction();
-            Query<T> query = session.createQuery("from " + entityClass.getName(), entityClass);
+            Query<T> query = session.createQuery("from " + entityClass.getSimpleName(), entityClass);
             List<T> entities = query.getResultList();
             transaction.commit();
             return entities;
@@ -95,6 +95,7 @@ public abstract class GenericDAO<T> {
             if (transaction != null) {
                 transaction.rollback();
             }
+            org.slf4j.LoggerFactory.getLogger(BaseRepository.class).error("Error finding all entities of type " + entityClass.getSimpleName(), e);
             throw new RuntimeException("Error finding all entities", e);
         }
     }

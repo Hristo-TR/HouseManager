@@ -1,4 +1,4 @@
-package org.example.dao;
+package org.example.repository;
 
 import org.example.entity.Resident;
 import org.hibernate.Session;
@@ -7,8 +7,8 @@ import org.hibernate.query.Query;
 
 import java.util.List;
 
-public class ResidentDAO extends GenericDAO<Resident> {
-    public ResidentDAO() {
+public class ResidentRepository extends BaseRepository<Resident> {
+    public ResidentRepository() {
         super(Resident.class);
     }
 

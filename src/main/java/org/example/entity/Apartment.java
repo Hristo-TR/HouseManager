@@ -16,36 +16,36 @@ public class Apartment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Apartment number is required")
+    @NotBlank
     @Column(nullable = false)
     private String number;
 
-    @NotNull(message = "Floor is required")
+    @NotNull
     @Column(nullable = false)
     private Integer floor;
 
-    @NotNull(message = "Area is required")
-    @Positive(message = "Area must be positive")
+    @NotNull
+    @Positive
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal area;
 
-    @NotNull(message = "Building is required")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @NotNull
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "building_id", nullable = false)
     private Building building;
 
-    @NotNull(message = "Owner is required")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @NotNull
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "owner_id", nullable = false)
     private Owner owner;
 
-    @OneToMany(mappedBy = "apartment", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "apartment", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Resident> residents = new ArrayList<>();
 
-    @OneToMany(mappedBy = "apartment", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "apartment", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Pet> pets = new ArrayList<>();
 
-    @OneToMany(mappedBy = "apartment", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "apartment", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Payment> payments = new ArrayList<>();
 
     public Apartment() {

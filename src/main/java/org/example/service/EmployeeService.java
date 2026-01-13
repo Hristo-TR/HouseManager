@@ -1,20 +1,20 @@
 package org.example.service;
 
-import org.example.dao.BuildingDAO;
-import org.example.dao.EmployeeDAO;
 import org.example.entity.Building;
 import org.example.entity.Employee;
+import org.example.repository.BuildingRepository;
+import org.example.repository.EmployeeRepository;
 import org.example.util.ValidationUtil;
 
 import java.util.List;
 
 public class EmployeeService {
-    private final EmployeeDAO employeeDAO;
-    private final BuildingDAO buildingDAO;
+    private final EmployeeRepository employeeRepository;
+    private final BuildingRepository buildingRepository;
 
     public EmployeeService() {
-        this.employeeDAO = new EmployeeDAO();
-        this.buildingDAO = new BuildingDAO();
+        this.employeeRepository = new EmployeeRepository();
+        this.buildingRepository = new BuildingRepository();
     }
 
     public Employee createEmployee(String firstName, String lastName, String phone, Long companyId) {
@@ -29,11 +29,11 @@ public class EmployeeService {
         if (validationError != null) {
             throw new IllegalArgumentException("Validation failed: " + validationError);
         }
-        return employeeDAO.save(employee);
+        return employeeRepository.save(employee);
     }
 
     public Employee updateEmployee(Long id, String firstName, String lastName, String phone) {
-        Employee employee = employeeDAO.findById(id);
+        Employee employee = employeeRepository.findById(id);
         if (employee == null) {
             throw new IllegalArgumentException("Employee not found with id: " + id);
         }
@@ -44,11 +44,11 @@ public class EmployeeService {
         if (validationError != null) {
             throw new IllegalArgumentException("Validation failed: " + validationError);
         }
-        return employeeDAO.update(employee);
+        return employeeRepository.update(employee);
     }
 
     public void deleteEmployee(Long id) {
-        Employee employee = employeeDAO.findById(id);
+        Employee employee = employeeRepository.findById(id);
         if (employee == null) {
             throw new IllegalArgumentException("Employee not found with id: " + id);
         }
@@ -56,9 +56,8 @@ public class EmployeeService {
         List<Building> buildings = employee.getBuildings();
         Long companyId = employee.getCompany().getId();
 
-        employeeDAO.delete(id);
+        employeeRepository.delete(id);
 
-        // Redistribute buildings to other employees
         redistributeBuildings(buildings, companyId);
     }
 
@@ -67,32 +66,32 @@ public class EmployeeService {
             Employee newEmployee = findEmployeeWithFewestBuildings(companyId);
             if (newEmployee != null) {
                 building.setEmployee(newEmployee);
-                buildingDAO.update(building);
+                buildingRepository.update(building);
             }
         }
     }
 
     public Employee getEmployeeById(Long id) {
-        return employeeDAO.findById(id);
+        return employeeRepository.findById(id);
     }
 
     public List<Employee> getAllEmployees() {
-        return employeeDAO.findAll();
+        return employeeRepository.findAll();
     }
 
     public List<Employee> getEmployeesByCompany(Long companyId) {
-        return employeeDAO.findByCompany(companyId);
+        return employeeRepository.findByCompany(companyId);
     }
 
     public List<Employee> getAllEmployeesSortedByName() {
-        return employeeDAO.findAllSortedByName();
+        return employeeRepository.findAllSortedByName();
     }
 
     public List<Employee> getAllEmployeesSortedByBuildingCount() {
-        return employeeDAO.findAllSortedByBuildingCount();
+        return employeeRepository.findAllSortedByBuildingCount();
     }
 
     public Employee findEmployeeWithFewestBuildings(Long companyId) {
-        return employeeDAO.findEmployeeWithFewestBuildings(companyId);
+        return employeeRepository.findEmployeeWithFewestBuildings(companyId);
     }
 }

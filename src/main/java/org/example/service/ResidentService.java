@@ -1,26 +1,26 @@
 package org.example.service;
 
-import org.example.dao.ApartmentDAO;
-import org.example.dao.ResidentDAO;
 import org.example.entity.Apartment;
 import org.example.entity.Resident;
+import org.example.repository.ApartmentRepository;
+import org.example.repository.ResidentRepository;
 import org.example.util.ValidationUtil;
 
 import java.time.LocalDate;
 import java.util.List;
 
 public class ResidentService {
-    private final ResidentDAO residentDAO;
-    private final ApartmentDAO apartmentDAO;
+    private final ResidentRepository residentRepository;
+    private final ApartmentRepository apartmentRepository;
 
     public ResidentService() {
-        this.residentDAO = new ResidentDAO();
-        this.apartmentDAO = new ApartmentDAO();
+        this.residentRepository = new ResidentRepository();
+        this.apartmentRepository = new ApartmentRepository();
     }
 
     public Resident createResident(String firstName, String lastName, LocalDate birthDate,
                                    Boolean usesElevator, Long apartmentId) {
-        Apartment apartment = apartmentDAO.findById(apartmentId);
+        Apartment apartment = apartmentRepository.findById(apartmentId);
         if (apartment == null) {
             throw new IllegalArgumentException("Apartment not found with id: " + apartmentId);
         }
@@ -30,12 +30,12 @@ public class ResidentService {
         if (validationError != null) {
             throw new IllegalArgumentException("Validation failed: " + validationError);
         }
-        return residentDAO.save(resident);
+        return residentRepository.save(resident);
     }
 
     public Resident updateResident(Long id, String firstName, String lastName, LocalDate birthDate,
                                    Boolean usesElevator) {
-        Resident resident = residentDAO.findById(id);
+        Resident resident = residentRepository.findById(id);
         if (resident == null) {
             throw new IllegalArgumentException("Resident not found with id: " + id);
         }
@@ -47,38 +47,38 @@ public class ResidentService {
         if (validationError != null) {
             throw new IllegalArgumentException("Validation failed: " + validationError);
         }
-        return residentDAO.update(resident);
+        return residentRepository.update(resident);
     }
 
     public void deleteResident(Long id) {
-        Resident resident = residentDAO.findById(id);
+        Resident resident = residentRepository.findById(id);
         if (resident == null) {
             throw new IllegalArgumentException("Resident not found with id: " + id);
         }
-        residentDAO.delete(id);
+        residentRepository.delete(id);
     }
 
     public Resident getResidentById(Long id) {
-        return residentDAO.findById(id);
+        return residentRepository.findById(id);
     }
 
     public List<Resident> getAllResidents() {
-        return residentDAO.findAll();
+        return residentRepository.findAll();
     }
 
     public List<Resident> getResidentsByApartment(Long apartmentId) {
-        return residentDAO.findByApartment(apartmentId);
+        return residentRepository.findByApartment(apartmentId);
     }
 
     public List<Resident> getResidentsByBuilding(Long buildingId) {
-        return residentDAO.findByBuilding(buildingId);
+        return residentRepository.findByBuilding(buildingId);
     }
 
     public List<Resident> getAllResidentsSortedByName() {
-        return residentDAO.findAllSortedByName();
+        return residentRepository.findAllSortedByName();
     }
 
     public List<Resident> getAllResidentsSortedByAge() {
-        return residentDAO.findAllSortedByAge();
+        return residentRepository.findAllSortedByAge();
     }
 }

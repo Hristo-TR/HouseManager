@@ -11,20 +11,20 @@ public class Pet {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Pet name is required")
+    @NotBlank
     @Column(nullable = false)
     private String name;
 
-    @NotBlank(message = "Pet type is required")
+    @NotBlank
     @Column(nullable = false)
     private String type;
 
-    @NotNull(message = "Common areas usage flag is required")
+    @NotNull
     @Column(name = "uses_common_areas", nullable = false)
     private Boolean usesCommonAreas;
 
-    @NotNull(message = "Apartment is required")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @NotNull
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "apartment_id", nullable = false)
     private Apartment apartment;
 

@@ -3,6 +3,7 @@ package org.example.ui;
 import org.example.entity.Payment;
 import org.example.service.FeeService;
 import org.example.service.PaymentService;
+import org.example.util.DisplayUtil;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -112,7 +113,8 @@ public class PaymentMenu {
 
         try {
             Payment payment = paymentService.recordPayment(apartmentId, amount, paymentDate, month, year);
-            System.out.println("Payment recorded successfully: " + payment);
+            System.out.println("Payment recorded successfully!");
+            DisplayUtil.displayPayment(payment);
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
@@ -127,7 +129,8 @@ public class PaymentMenu {
 
         try {
             Payment payment = paymentService.recordPaymentForMonth(apartmentId, month, year);
-            System.out.println("Payment recorded successfully: " + payment);
+            System.out.println("Payment recorded successfully!");
+            DisplayUtil.displayPayment(payment);
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
@@ -140,7 +143,7 @@ public class PaymentMenu {
             if (payments.isEmpty()) {
                 System.out.println("No payments found for this apartment.");
             } else {
-                payments.forEach(System.out::println);
+                DisplayUtil.displayPayments(payments);
             }
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
@@ -154,7 +157,7 @@ public class PaymentMenu {
             if (payments.isEmpty()) {
                 System.out.println("No payments found for this building.");
             } else {
-                payments.forEach(System.out::println);
+                DisplayUtil.displayPayments(payments);
             }
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
@@ -168,7 +171,7 @@ public class PaymentMenu {
             if (payments.isEmpty()) {
                 System.out.println("No payments found for this company.");
             } else {
-                payments.forEach(System.out::println);
+                DisplayUtil.displayPayments(payments);
             }
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
@@ -182,7 +185,7 @@ public class PaymentMenu {
             if (payments.isEmpty()) {
                 System.out.println("No payments found for this employee.");
             } else {
-                payments.forEach(System.out::println);
+                DisplayUtil.displayPayments(payments);
             }
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());

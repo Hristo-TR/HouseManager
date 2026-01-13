@@ -48,6 +48,13 @@
             <version>8.0.1.Final</version>
         </dependency>
 
+        <!-- Jakarta Expression Language (required by Hibernate Validator) -->
+        <dependency>
+            <groupId>org.glassfish</groupId>
+            <artifactId>jakarta.el</artifactId>
+            <version>4.0.1</version>
+        </dependency>
+
         <!-- SLF4J API -->
         <dependency>
             <groupId>org.slf4j</groupId>

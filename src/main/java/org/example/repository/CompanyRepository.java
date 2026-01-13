@@ -1,4 +1,4 @@
-package org.example.dao;
+package org.example.repository;
 
 import org.example.entity.Company;
 import org.hibernate.Session;
@@ -8,8 +8,8 @@ import org.hibernate.query.Query;
 import java.math.BigDecimal;
 import java.util.List;
 
-public class CompanyDAO extends GenericDAO<Company> {
-    public CompanyDAO() {
+public class CompanyRepository extends BaseRepository<Company> {
+    public CompanyRepository() {
         super(Company.class);
     }
 
@@ -18,16 +18,12 @@ public class CompanyDAO extends GenericDAO<Company> {
         Transaction transaction = null;
         try {
             transaction = session.beginTransaction();
-            Query<Company> query = session.createQuery(
-                    "SELECT DISTINCT c FROM Company c " +
-                            "LEFT JOIN c.buildings b " +
-                            "LEFT JOIN b.apartments a " +
-                            "LEFT JOIN a.payments p " +
-                            "GROUP BY c.id " +
-                            "ORDER BY COALESCE(SUM(p.amount), 0) DESC",
-                    Company.class
-            );
-            List<Company> companies = query.getResultList();
+            List<Company> companies = session.createQuery("FROM Company", Company.class).getResultList();
+            companies.sort((c1, c2) -> {
+                BigDecimal rev1 = getRevenueInSession(session, c1.getId());
+                BigDecimal rev2 = getRevenueInSession(session, c2.getId());
+                return rev2.compareTo(rev1);
+            });
             transaction.commit();
             return companies;
         } catch (Exception e) {
@@ -36,6 +32,19 @@ public class CompanyDAO extends GenericDAO<Company> {
             }
             throw new RuntimeException("Error finding companies sorted by revenue", e);
         }
+    }
+
+    private BigDecimal getRevenueInSession(Session session, Long companyId) {
+        Query<BigDecimal> query = session.createQuery(
+                "SELECT COALESCE(SUM(p.amount), 0) FROM Payment p " +
+                        "JOIN p.apartment a " +
+                        "JOIN a.building b " +
+                        "WHERE b.company.id = :companyId",
+                BigDecimal.class
+        );
+        query.setParameter("companyId", companyId);
+        BigDecimal result = query.uniqueResult();
+        return result != null ? result : BigDecimal.ZERO;
     }
 
     public BigDecimal getTotalRevenue(Long companyId) {

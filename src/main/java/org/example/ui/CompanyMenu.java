@@ -2,6 +2,7 @@ package org.example.ui;
 
 import org.example.entity.Company;
 import org.example.service.CompanyService;
+import org.example.util.DisplayUtil;
 
 import java.util.List;
 import java.util.Scanner;
@@ -70,7 +71,8 @@ public class CompanyMenu {
 
         try {
             Company company = companyService.createCompany(name, address, phone, email);
-            System.out.println("Company created successfully: " + company);
+            System.out.println("Company created successfully!");
+            DisplayUtil.displayCompany(company);
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
@@ -90,7 +92,8 @@ public class CompanyMenu {
 
         try {
             Company company = companyService.updateCompany(id, name, address, phone, email);
-            System.out.println("Company updated successfully: " + company);
+            System.out.println("Company updated successfully!");
+            DisplayUtil.displayCompany(company);
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
@@ -109,11 +112,7 @@ public class CompanyMenu {
     private void viewAllCompanies() {
         try {
             List<Company> companies = companyService.getAllCompanies();
-            if (companies.isEmpty()) {
-                System.out.println("No companies found.");
-            } else {
-                companies.forEach(System.out::println);
-            }
+            DisplayUtil.displayCompanies(companies);
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
@@ -124,7 +123,7 @@ public class CompanyMenu {
         try {
             Company company = companyService.getCompanyById(id);
             if (company != null) {
-                System.out.println(company);
+                DisplayUtil.displayCompany(company);
             } else {
                 System.out.println("Company not found.");
             }
@@ -139,10 +138,17 @@ public class CompanyMenu {
             if (companies.isEmpty()) {
                 System.out.println("No companies found.");
             } else {
-                companies.forEach(c -> {
-                    System.out.println(c + " - Revenue: " +
-                            new org.example.dao.CompanyDAO().getTotalRevenue(c.getId()) + " BGN");
-                });
+                System.out.println("\n=== Companies Sorted by Revenue ===");
+                System.out.println(String.format("%-5s | %-30s | %-15s", "ID", "Name", "Revenue"));
+                System.out.println("--------------------------------------------------------");
+                org.example.repository.CompanyRepository repo = new org.example.repository.CompanyRepository();
+                for (Company c : companies) {
+                    System.out.println(String.format("%-5s | %-30s | %-15s BGN",
+                            c.getId(),
+                            c.getName(),
+                            repo.getTotalRevenue(c.getId())));
+                }
+                System.out.println();
             }
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());

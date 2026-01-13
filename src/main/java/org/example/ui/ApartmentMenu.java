@@ -1,9 +1,12 @@
 package org.example.ui;
 
 import org.example.entity.Apartment;
+import org.example.entity.Building;
 import org.example.entity.Owner;
 import org.example.service.ApartmentService;
+import org.example.service.BuildingService;
 import org.example.service.OwnerService;
+import org.example.util.DisplayUtil;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -13,11 +16,13 @@ public class ApartmentMenu {
     private final Scanner scanner;
     private final ApartmentService apartmentService;
     private final OwnerService ownerService;
+    private final BuildingService buildingService;
 
     public ApartmentMenu(Scanner scanner) {
         this.scanner = scanner;
         this.apartmentService = new ApartmentService();
         this.ownerService = new OwnerService();
+        this.buildingService = new BuildingService();
     }
 
     public void showMenu() {
@@ -95,28 +100,79 @@ public class ApartmentMenu {
 
         try {
             Owner owner = ownerService.createOwner(firstName, lastName, phone, email);
-            System.out.println("Owner created successfully: " + owner);
+            System.out.println("Owner created successfully!");
+            DisplayUtil.displayOwner(owner);
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
     }
 
     private void createApartment() {
-        Long buildingId = (long) ConsoleUI.getIntInput(scanner, "Enter building ID: ");
-        Long ownerId = (long) ConsoleUI.getIntInput(scanner, "Enter owner ID: ");
-        scanner.nextLine();
-        System.out.print("Enter apartment number: ");
-        String number = scanner.nextLine();
-        System.out.print("Enter floor: ");
-        int floor = scanner.nextInt();
-        System.out.print("Enter area: ");
-        BigDecimal area = scanner.nextBigDecimal();
-
         try {
+            List<Building> buildings = buildingService.getAllBuildings();
+            if (buildings.isEmpty()) {
+                System.out.println("No buildings found. Please create a building first (Building Management).");
+                return;
+            }
+            System.out.println("\n=== Available Buildings ===");
+            DisplayUtil.displayBuildings(buildings);
+
+            Long buildingId = (long) ConsoleUI.getIntInput(scanner, "Enter building ID: ");
+
+            List<Owner> owners = ownerService.getAllOwners();
+            Long ownerId;
+            if (owners.isEmpty()) {
+                System.out.println("No owners found. Let's create one first.");
+                Owner newOwner = promptCreateOwner();
+                if (newOwner == null) return;
+                ownerId = newOwner.getId();
+            } else {
+                System.out.println("\n=== Available Owners ===");
+                DisplayUtil.displayOwners(owners);
+                System.out.println("\nEnter 0 to create a new owner, or enter an existing owner ID:");
+                ownerId = (long) ConsoleUI.getIntInput(scanner, "Owner ID: ");
+                if (ownerId == 0) {
+                    Owner newOwner = promptCreateOwner();
+                    if (newOwner == null) return;
+                    ownerId = newOwner.getId();
+                }
+            }
+
+            scanner.nextLine();
+            System.out.print("Enter apartment number: ");
+            String number = scanner.nextLine();
+            System.out.print("Enter floor: ");
+            int floor = scanner.nextInt();
+            System.out.print("Enter area: ");
+            BigDecimal area = scanner.nextBigDecimal();
+
             Apartment apartment = apartmentService.createApartment(number, floor, area, buildingId, ownerId);
-            System.out.println("Apartment created successfully: " + apartment);
+            System.out.println("Apartment created successfully!");
+            DisplayUtil.displayApartment(apartment);
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
+        }
+    }
+
+    private Owner promptCreateOwner() {
+        scanner.nextLine();
+        System.out.print("Enter first name: ");
+        String firstName = scanner.nextLine();
+        System.out.print("Enter last name: ");
+        String lastName = scanner.nextLine();
+        System.out.print("Enter phone: ");
+        String phone = scanner.nextLine();
+        System.out.print("Enter email: ");
+        String email = scanner.nextLine();
+
+        try {
+            Owner owner = ownerService.createOwner(firstName, lastName, phone, email);
+            System.out.println("Owner created successfully!");
+            DisplayUtil.displayOwner(owner);
+            return owner;
+        } catch (Exception e) {
+            System.out.println("Error creating owner: " + e.getMessage());
+            return null;
         }
     }
 
@@ -132,7 +188,8 @@ public class ApartmentMenu {
 
         try {
             Apartment apartment = apartmentService.updateApartment(id, number, floor, area);
-            System.out.println("Apartment updated successfully: " + apartment);
+            System.out.println("Apartment updated successfully!");
+            DisplayUtil.displayApartment(apartment);
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
@@ -152,7 +209,8 @@ public class ApartmentMenu {
 
         try {
             Owner owner = ownerService.updateOwner(id, firstName, lastName, phone, email);
-            System.out.println("Owner updated successfully: " + owner);
+            System.out.println("Owner updated successfully!");
+            DisplayUtil.displayOwner(owner);
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
@@ -184,7 +242,7 @@ public class ApartmentMenu {
             if (apartments.isEmpty()) {
                 System.out.println("No apartments found.");
             } else {
-                apartments.forEach(System.out::println);
+                DisplayUtil.displayApartments(apartments);
             }
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
@@ -197,7 +255,7 @@ public class ApartmentMenu {
             if (owners.isEmpty()) {
                 System.out.println("No owners found.");
             } else {
-                owners.forEach(System.out::println);
+                DisplayUtil.displayOwners(owners);
             }
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
@@ -209,7 +267,7 @@ public class ApartmentMenu {
         try {
             Apartment apartment = apartmentService.getApartmentById(id);
             if (apartment != null) {
-                System.out.println(apartment);
+                DisplayUtil.displayApartment(apartment);
             } else {
                 System.out.println("Apartment not found.");
             }
@@ -223,7 +281,7 @@ public class ApartmentMenu {
         try {
             Owner owner = ownerService.getOwnerById(id);
             if (owner != null) {
-                System.out.println(owner);
+                DisplayUtil.displayOwner(owner);
             } else {
                 System.out.println("Owner not found.");
             }
@@ -239,7 +297,7 @@ public class ApartmentMenu {
             if (apartments.isEmpty()) {
                 System.out.println("No apartments found for this building.");
             } else {
-                apartments.forEach(System.out::println);
+                DisplayUtil.displayApartments(apartments);
             }
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());

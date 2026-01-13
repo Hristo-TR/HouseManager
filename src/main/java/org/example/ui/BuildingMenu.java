@@ -2,6 +2,7 @@ package org.example.ui;
 
 import org.example.entity.Building;
 import org.example.service.BuildingService;
+import org.example.util.DisplayUtil;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -79,7 +80,8 @@ public class BuildingMenu {
         try {
             Building building = buildingService.createBuilding(address, floors, apartmentCount,
                     builtArea, commonArea, companyId);
-            System.out.println("Building created successfully: " + building);
+            System.out.println("Building created successfully!");
+            DisplayUtil.displayBuilding(building);
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
@@ -102,7 +104,8 @@ public class BuildingMenu {
         try {
             Building building = buildingService.updateBuilding(id, address, floors,
                     apartmentCount, builtArea, commonArea);
-            System.out.println("Building updated successfully: " + building);
+            System.out.println("Building updated successfully!");
+            DisplayUtil.displayBuilding(building);
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
@@ -124,7 +127,7 @@ public class BuildingMenu {
             if (buildings.isEmpty()) {
                 System.out.println("No buildings found.");
             } else {
-                buildings.forEach(System.out::println);
+                DisplayUtil.displayBuildings(buildings);
             }
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
@@ -136,7 +139,7 @@ public class BuildingMenu {
         try {
             Building building = buildingService.getBuildingById(id);
             if (building != null) {
-                System.out.println(building);
+                DisplayUtil.displayBuilding(building);
             } else {
                 System.out.println("Building not found.");
             }
@@ -152,7 +155,7 @@ public class BuildingMenu {
             if (buildings.isEmpty()) {
                 System.out.println("No buildings found for this company.");
             } else {
-                buildings.forEach(System.out::println);
+                DisplayUtil.displayBuildings(buildings);
             }
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
@@ -166,7 +169,7 @@ public class BuildingMenu {
             if (buildings.isEmpty()) {
                 System.out.println("No buildings found for this employee.");
             } else {
-                buildings.forEach(System.out::println);
+                DisplayUtil.displayBuildings(buildings);
             }
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());

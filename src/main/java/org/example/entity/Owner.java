@@ -14,19 +14,19 @@ public class Owner {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "First name is required")
+    @NotBlank
     @Column(name = "first_name", nullable = false)
     private String firstName;
 
-    @NotBlank(message = "Last name is required")
+    @NotBlank
     @Column(name = "last_name", nullable = false)
     private String lastName;
 
-    @NotBlank(message = "Phone is required")
+    @NotBlank
     @Column(nullable = false)
     private String phone;
 
-    @Email(message = "Email must be valid")
+    @Email
     @Column(nullable = false)
     private String email;
 

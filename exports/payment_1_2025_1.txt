@@ -1,0 +1,10 @@
+Payment Receipt
+================
+Company: Company1
+Employee: Hristo Trifonob
+Building: Sofia Ovcha Kupel 1
+Apartment: 2
+Amount: 1400 BGN
+Date: 2025-01-12
+================
+

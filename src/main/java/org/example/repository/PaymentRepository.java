@@ -1,4 +1,4 @@
-package org.example.dao;
+package org.example.repository;
 
 import org.example.entity.Payment;
 import org.hibernate.Session;
@@ -8,8 +8,8 @@ import org.hibernate.query.Query;
 import java.math.BigDecimal;
 import java.util.List;
 
-public class PaymentDAO extends GenericDAO<Payment> {
-    public PaymentDAO() {
+public class PaymentRepository extends BaseRepository<Payment> {
+    public PaymentRepository() {
         super(Payment.class);
     }
 

@@ -1,7 +1,10 @@
 package org.example.ui;
 
+import org.example.entity.Apartment;
 import org.example.entity.Resident;
+import org.example.service.ApartmentService;
 import org.example.service.ResidentService;
+import org.example.util.DisplayUtil;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -10,10 +13,12 @@ import java.util.Scanner;
 public class ResidentMenu {
     private final Scanner scanner;
     private final ResidentService residentService;
+    private final ApartmentService apartmentService;
 
     public ResidentMenu(Scanner scanner) {
         this.scanner = scanner;
         this.residentService = new ResidentService();
+        this.apartmentService = new ApartmentService();
     }
 
     public void showMenu() {
@@ -71,22 +76,31 @@ public class ResidentMenu {
     }
 
     private void createResident() {
-        Long apartmentId = (long) ConsoleUI.getIntInput(scanner, "Enter apartment ID: ");
-        scanner.nextLine();
-        System.out.print("Enter first name: ");
-        String firstName = scanner.nextLine();
-        System.out.print("Enter last name: ");
-        String lastName = scanner.nextLine();
-        System.out.print("Enter birth date (YYYY-MM-DD): ");
-        String dateStr = scanner.nextLine();
-        LocalDate birthDate = LocalDate.parse(dateStr);
-        System.out.print("Uses elevator? (true/false): ");
-        Boolean usesElevator = scanner.nextBoolean();
-
         try {
+            List<Apartment> apartments = apartmentService.getAllApartments();
+            if (apartments.isEmpty()) {
+                System.out.println("No apartments found. Please create an apartment first (Apartment Management).");
+                return;
+            }
+            System.out.println("\n=== Available Apartments ===");
+            DisplayUtil.displayApartments(apartments);
+
+            Long apartmentId = (long) ConsoleUI.getIntInput(scanner, "Enter apartment ID: ");
+            scanner.nextLine();
+            System.out.print("Enter first name: ");
+            String firstName = scanner.nextLine();
+            System.out.print("Enter last name: ");
+            String lastName = scanner.nextLine();
+            System.out.print("Enter birth date (YYYY-MM-DD): ");
+            String dateStr = scanner.nextLine();
+            LocalDate birthDate = LocalDate.parse(dateStr);
+            System.out.print("Uses elevator? (true/false): ");
+            Boolean usesElevator = scanner.nextBoolean();
+
             Resident resident = residentService.createResident(firstName, lastName, birthDate,
                     usesElevator, apartmentId);
-            System.out.println("Resident created successfully: " + resident);
+            System.out.println("Resident created successfully!");
+            DisplayUtil.displayResident(resident);
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
@@ -108,7 +122,8 @@ public class ResidentMenu {
         try {
             Resident resident = residentService.updateResident(id, firstName, lastName,
                     birthDate, usesElevator);
-            System.out.println("Resident updated successfully: " + resident);
+            System.out.println("Resident updated successfully!");
+            DisplayUtil.displayResident(resident);
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
@@ -130,7 +145,7 @@ public class ResidentMenu {
             if (residents.isEmpty()) {
                 System.out.println("No residents found.");
             } else {
-                residents.forEach(System.out::println);
+                DisplayUtil.displayResidents(residents);
             }
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
@@ -142,7 +157,7 @@ public class ResidentMenu {
         try {
             Resident resident = residentService.getResidentById(id);
             if (resident != null) {
-                System.out.println(resident);
+                DisplayUtil.displayResident(resident);
             } else {
                 System.out.println("Resident not found.");
             }
@@ -158,7 +173,7 @@ public class ResidentMenu {
             if (residents.isEmpty()) {
                 System.out.println("No residents found for this apartment.");
             } else {
-                residents.forEach(System.out::println);
+                DisplayUtil.displayResidents(residents);
             }
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
@@ -172,7 +187,7 @@ public class ResidentMenu {
             if (residents.isEmpty()) {
                 System.out.println("No residents found for this building.");
             } else {
-                residents.forEach(System.out::println);
+                DisplayUtil.displayResidents(residents);
             }
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
@@ -185,7 +200,7 @@ public class ResidentMenu {
             if (residents.isEmpty()) {
                 System.out.println("No residents found.");
             } else {
-                residents.forEach(System.out::println);
+                DisplayUtil.displayResidents(residents);
             }
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
@@ -198,7 +213,7 @@ public class ResidentMenu {
             if (residents.isEmpty()) {
                 System.out.println("No residents found.");
             } else {
-                residents.forEach(System.out::println);
+                DisplayUtil.displayResidents(residents);
             }
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());

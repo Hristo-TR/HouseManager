@@ -1,16 +1,16 @@
 package org.example.service;
 
-import org.example.dao.OwnerDAO;
 import org.example.entity.Owner;
+import org.example.repository.OwnerRepository;
 import org.example.util.ValidationUtil;
 
 import java.util.List;
 
 public class OwnerService {
-    private final OwnerDAO ownerDAO;
+    private final OwnerRepository ownerRepository;
 
     public OwnerService() {
-        this.ownerDAO = new OwnerDAO();
+        this.ownerRepository = new OwnerRepository();
     }
 
     public Owner createOwner(String firstName, String lastName, String phone, String email) {
@@ -19,11 +19,11 @@ public class OwnerService {
         if (validationError != null) {
             throw new IllegalArgumentException("Validation failed: " + validationError);
         }
-        return ownerDAO.save(owner);
+        return ownerRepository.save(owner);
     }
 
     public Owner updateOwner(Long id, String firstName, String lastName, String phone, String email) {
-        Owner owner = ownerDAO.findById(id);
+        Owner owner = ownerRepository.findById(id);
         if (owner == null) {
             throw new IllegalArgumentException("Owner not found with id: " + id);
         }
@@ -35,22 +35,22 @@ public class OwnerService {
         if (validationError != null) {
             throw new IllegalArgumentException("Validation failed: " + validationError);
         }
-        return ownerDAO.update(owner);
+        return ownerRepository.update(owner);
     }
 
     public void deleteOwner(Long id) {
-        Owner owner = ownerDAO.findById(id);
+        Owner owner = ownerRepository.findById(id);
         if (owner == null) {
             throw new IllegalArgumentException("Owner not found with id: " + id);
         }
-        ownerDAO.delete(id);
+        ownerRepository.delete(id);
     }
 
     public Owner getOwnerById(Long id) {
-        return ownerDAO.findById(id);
+        return ownerRepository.findById(id);
     }
 
     public List<Owner> getAllOwners() {
-        return ownerDAO.findAll();
+        return ownerRepository.findAll();
     }
 }

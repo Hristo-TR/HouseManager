@@ -1,16 +1,16 @@
 package org.example.service;
 
-import org.example.dao.CompanyDAO;
 import org.example.entity.Company;
+import org.example.repository.CompanyRepository;
 import org.example.util.ValidationUtil;
 
 import java.util.List;
 
 public class CompanyService {
-    private final CompanyDAO companyDAO;
+    private final CompanyRepository companyRepository;
 
     public CompanyService() {
-        this.companyDAO = new CompanyDAO();
+        this.companyRepository = new CompanyRepository();
     }
 
     public Company createCompany(String name, String address, String phone, String email) {
@@ -19,11 +19,11 @@ public class CompanyService {
         if (validationError != null) {
             throw new IllegalArgumentException("Validation failed: " + validationError);
         }
-        return companyDAO.save(company);
+        return companyRepository.save(company);
     }
 
     public Company updateCompany(Long id, String name, String address, String phone, String email) {
-        Company company = companyDAO.findById(id);
+        Company company = companyRepository.findById(id);
         if (company == null) {
             throw new IllegalArgumentException("Company not found with id: " + id);
         }
@@ -35,26 +35,26 @@ public class CompanyService {
         if (validationError != null) {
             throw new IllegalArgumentException("Validation failed: " + validationError);
         }
-        return companyDAO.update(company);
+        return companyRepository.update(company);
     }
 
     public void deleteCompany(Long id) {
-        Company company = companyDAO.findById(id);
+        Company company = companyRepository.findById(id);
         if (company == null) {
             throw new IllegalArgumentException("Company not found with id: " + id);
         }
-        companyDAO.delete(id);
+        companyRepository.delete(id);
     }
 
     public Company getCompanyById(Long id) {
-        return companyDAO.findById(id);
+        return companyRepository.findById(id);
     }
 
     public List<Company> getAllCompanies() {
-        return companyDAO.findAll();
+        return companyRepository.findAll();
     }
 
     public List<Company> getAllCompaniesSortedByRevenue() {
-        return companyDAO.findAllSortedByRevenue();
+        return companyRepository.findAllSortedByRevenue();
     }
 }

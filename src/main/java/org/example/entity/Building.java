@@ -16,41 +16,41 @@ public class Building {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Address is required")
+    @NotBlank
     @Column(nullable = false)
     private String address;
 
-    @NotNull(message = "Number of floors is required")
+    @NotNull
     @Positive(message = "Number of floors must be positive")
     @Column(nullable = false)
     private Integer floors;
 
-    @NotNull(message = "Apartment count is required")
-    @Positive(message = "Apartment count must be positive")
+    @NotNull
+    @Positive
     @Column(name = "apartment_count", nullable = false)
     private Integer apartmentCount;
 
-    @NotNull(message = "Built area is required")
-    @Positive(message = "Built area must be positive")
+    @NotNull
+    @Positive
     @Column(name = "built_area", nullable = false, precision = 10, scale = 2)
     private BigDecimal builtArea;
 
-    @NotNull(message = "Common area is required")
-    @Positive(message = "Common area must be positive")
+    @NotNull
+    @Positive
     @Column(name = "common_area", nullable = false, precision = 10, scale = 2)
     private BigDecimal commonArea;
 
-    @NotNull(message = "Company is required")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @NotNull
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "company_id", nullable = false)
     private Company company;
 
-    @NotNull(message = "Employee is required")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @NotNull
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "employee_id", nullable = false)
     private Employee employee;
 
-    @OneToMany(mappedBy = "building", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "building", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Apartment> apartments = new ArrayList<>();
 
     @OneToOne(mappedBy = "building", cascade = CascadeType.ALL, orphanRemoval = true)

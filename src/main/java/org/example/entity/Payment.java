@@ -14,25 +14,25 @@ public class Payment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull(message = "Amount is required")
-    @Positive(message = "Amount must be positive")
+    @NotNull
+    @Positive
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal amount;
 
-    @NotNull(message = "Payment date is required")
+    @NotNull
     @Column(name = "payment_date", nullable = false)
     private LocalDate paymentDate;
 
-    @NotNull(message = "Month is required")
+    @NotNull
     @Column(nullable = false)
     private Integer month;
 
-    @NotNull(message = "Year is required")
+    @NotNull
     @Column(nullable = false)
     private Integer year;
 
-    @NotNull(message = "Apartment is required")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @NotNull
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "apartment_id", nullable = false)
     private Apartment apartment;
 

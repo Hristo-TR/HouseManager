@@ -14,26 +14,26 @@ public class Company {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Company name is required")
+    @NotBlank
     @Column(nullable = false)
     private String name;
 
-    @NotBlank(message = "Address is required")
+    @NotBlank
     @Column(nullable = false)
     private String address;
 
-    @NotBlank(message = "Phone is required")
+    @NotBlank
     @Column(nullable = false)
     private String phone;
 
-    @Email(message = "Email must be valid")
+    @Email
     @Column(nullable = false)
     private String email;
 
-    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Employee> employees = new ArrayList<>();
 
-    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Building> buildings = new ArrayList<>();
 
     public Company() {

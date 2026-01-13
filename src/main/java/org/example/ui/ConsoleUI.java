@@ -35,6 +35,8 @@ public class ConsoleUI {
 
     public void start() {
         System.out.println("=== Electronic House Manager ===");
+        System.out.println("Logs are being written to: logs/house-manager.log");
+        System.out.println();
         boolean running = true;
 
         while (running) {

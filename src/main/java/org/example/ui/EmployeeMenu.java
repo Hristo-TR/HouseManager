@@ -2,6 +2,7 @@ package org.example.ui;
 
 import org.example.entity.Employee;
 import org.example.service.EmployeeService;
+import org.example.util.DisplayUtil;
 
 import java.util.List;
 import java.util.Scanner;
@@ -77,7 +78,8 @@ public class EmployeeMenu {
 
         try {
             Employee employee = employeeService.createEmployee(firstName, lastName, phone, companyId);
-            System.out.println("Employee created successfully: " + employee);
+            System.out.println("Employee created successfully!");
+            DisplayUtil.displayEmployee(employee);
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
@@ -95,7 +97,8 @@ public class EmployeeMenu {
 
         try {
             Employee employee = employeeService.updateEmployee(id, firstName, lastName, phone);
-            System.out.println("Employee updated successfully: " + employee);
+            System.out.println("Employee updated successfully!");
+            DisplayUtil.displayEmployee(employee);
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
@@ -117,7 +120,7 @@ public class EmployeeMenu {
             if (employees.isEmpty()) {
                 System.out.println("No employees found.");
             } else {
-                employees.forEach(System.out::println);
+                DisplayUtil.displayEmployees(employees);
             }
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
@@ -129,7 +132,7 @@ public class EmployeeMenu {
         try {
             Employee employee = employeeService.getEmployeeById(id);
             if (employee != null) {
-                System.out.println(employee);
+                DisplayUtil.displayEmployee(employee);
             } else {
                 System.out.println("Employee not found.");
             }
@@ -145,7 +148,7 @@ public class EmployeeMenu {
             if (employees.isEmpty()) {
                 System.out.println("No employees found for this company.");
             } else {
-                employees.forEach(System.out::println);
+                DisplayUtil.displayEmployees(employees);
             }
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
@@ -158,7 +161,7 @@ public class EmployeeMenu {
             if (employees.isEmpty()) {
                 System.out.println("No employees found.");
             } else {
-                employees.forEach(System.out::println);
+                DisplayUtil.displayEmployees(employees);
             }
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
@@ -171,10 +174,14 @@ public class EmployeeMenu {
             if (employees.isEmpty()) {
                 System.out.println("No employees found.");
             } else {
-                employees.forEach(e -> {
-                    int count = e.getBuildings().size();
-                    System.out.println(e + " - Buildings: " + count);
-                });
+                System.out.println("\n=== Employees Sorted by Building Count ===");
+                System.out.println(String.format("%-5s | %-30s | %-10s", "ID", "Name", "Buildings"));
+                System.out.println("--------------------------------------------------------");
+                for (Employee e : employees) {
+                    System.out.println(String.format("%-5s | %-30s | %-10s",
+                            e.getId(), e.getFullName(), e.getBuildings().size()));
+                }
+                System.out.println();
             }
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
